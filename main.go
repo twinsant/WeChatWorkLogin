@@ -1,7 +1,10 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
+	"net/http"
 
 	"./wechat"
 
@@ -9,6 +12,10 @@ import (
 )
 
 func main() {
+	domain := flag.String("domain", "127.0.0.1", "App domain")
+	port := flag.Int("port", 9527, "App domain")
+	flag.Parse()
+
 	wechat := wechat.NewWechatWork()
 	if success := wechat.Gettoken(); !success {
 		log.Fatalln("Gettoken failed!")
@@ -26,11 +33,14 @@ func main() {
 		if errcode == 0 {
 			user, _ := wechat.Getuser(UserId)
 			log.Printf("%v", user)
+			c.SetCookie("wcwl_uid", UserId, 7200, "/", *domain, false, true)
 		}
 
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
+		redirect := fmt.Sprintf("http://%s:%d%s", *domain, *port, "/")
+		log.Printf("Redirecting: %s ...", redirect)
+		script := fmt.Sprintf("<script>window.location.href = '%s';</script>", redirect)
+		c.Header("Content-Type", "text/html")
+		c.String(http.StatusOK, script)
 	})
 	r.Run()
 }
