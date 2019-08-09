@@ -56,3 +56,18 @@ $bg:#2d3a4b;
 }
 </style>
 ```
+
+## Nginx
+```
+    server {
+        listen 80;
+        server_name yourdomain;
+
+        location / {
+            proxy_pass http://127.0.0.1:9527;
+        }
+        location /user {
+            proxy_pass http://127.0.0.1:8080;
+        }
+    }
+```
