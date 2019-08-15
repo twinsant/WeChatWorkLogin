@@ -1,6 +1,44 @@
 # WeChatWorkLogin
  企业微信登录
 
+ ## React
+ ```Typescript
+ import { Row, Col } from 'antd';
+import React, { Component } from 'react';
+import Script from 'react-load-script';
+import consola from 'consola';
+
+class Login extends Component {
+  handleScriptLoad() {
+    consola.info(MY_ENV);
+    window.WwLogin({
+      id: 'wx_reg',
+      appid: WECHAT_WORK_APPID,
+      agentid: WECHAT_WORK_AGENTID,
+      redirect_uri: WECHAT_WORK_REDIRECT_URI,
+      state: '',
+      href: '',
+    });
+  }
+  render() {
+    return (
+      <div>
+        <Row type="flex" justify="center" align="top">
+          <div id="wx_reg" />
+          <Script
+            url="http://rescdn.qqmail.com/node/ww/wwopenmng/js/sso/wwLogin-1.0.0.js"
+            onLoad={this.handleScriptLoad.bind(this)}
+          />
+        </Row>
+      </div>
+    );
+  }
+}
+
+export default Login;
+
+ ```
+
  ## Vue + Element
  ```Javascript
  <template>
